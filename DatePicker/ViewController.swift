@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ViewController: UIViewController,DatePickerChoiseDelegate {
+class ViewController: UIViewController,DatePickerChoiceDelegate {
 
     var datePicker = DatePickerViewController.new()
     @IBOutlet weak var dateButton: UIButton!
@@ -17,17 +17,17 @@ class ViewController: UIViewController,DatePickerChoiseDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.preaSuperView = self.view
-        datePicker.didChoiseDatePicker = self
+        datePicker.choiceDelegate = self
     }
 
     @IBAction func clickButton(sender: AnyObject) {
         datePicker.showDatePickerView()
     }
-
-    func didChoiseDatePicker(datePickerView: DatePickerView) {
+    
+    func didChoiceDatePicker(datePickerView: DatePickerView) {
         dateButton.setTitle(datePickerView.selectedDateString, forState:.Normal)
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

@@ -8,17 +8,16 @@
 
 import UIKit
 
-protocol DatePickerChoiseDelegate
+protocol DatePickerChoiceDelegate
 {
-    func didChoiseDatePicker(datePickerView: DatePickerView)
+    func didChoiceDatePicker(datePickerView: DatePickerView)
 }
 
 class DatePickerViewController: UIViewController,DatePickerDelegate {
     
     var preaSuperView:UIView = UIView()
     var selectDate:String = ""
-    var didChoiseDatePicker:DatePickerChoiseDelegate?
-    
+    var choiceDelegate:DatePickerChoiceDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         var pickerView = DatePickerView(frame: self.view.frame)
@@ -70,7 +69,7 @@ class DatePickerViewController: UIViewController,DatePickerDelegate {
     func didSelectedItemDatePicker(datePickerView: DatePickerView) {
         selectDate = datePickerView.selectedDateString
         println(selectDate)
-        didChoiseDatePicker?.didChoiseDatePicker(datePickerView)
+        choiceDelegate?.didChoiceDatePicker(datePickerView)
         self.dismissDatePickerView()
     }
     /*
