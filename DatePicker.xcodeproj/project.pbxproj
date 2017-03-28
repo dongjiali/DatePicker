@@ -384,6 +384,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = G7A3KSFA49;
 				INFOPLIST_FILE = DatePicker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
@@ -397,6 +398,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = G7A3KSFA49;
 				INFOPLIST_FILE = DatePicker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
