@@ -14,20 +14,18 @@ var StartYear = 0;
 var EndYear = 0;
 
 class DatePickerSource: NSObject {
-    var calendar = NSCalendar.init(calendarIdentifier:NSCalendarIdentifierGregorian)
-    var timeZone = NSTimeZone.new()
-    var components = NSDateComponents.new()
+    var calendar = Calendar.init(identifier:Calendar.Identifier.gregorian)
+    var timeZone = TimeZone(identifier: "UTC")
+    var components = DateComponents.init()
     
     func getYears() -> Array<String>
     {
         var years = [String]()
-        let unitFlags = NSCalendarUnit.YearCalendarUnit|NSCalendarUnit.MonthCalendarUnit|NSCalendarUnit.DayCalendarUnit|NSCalendarUnit.WeekdayCalendarUnit|NSCalendarUnit.HourCalendarUnit|NSCalendarUnit.MinuteCalendarUnit|NSCalendarUnit.SecondCalendarUnit
-        components = calendar!.components(unitFlags, fromDate: NSDate.new())
-        StartYear = components.year - YESTSPACEYEAR;
-        EndYear = components.year + LASTSPACEYEAR;
+        components = calendar.dateComponents([.year,.month,.day,.weekday,.hour,.minute,.second], from: Date())
+        StartYear = components.year! - YESTSPACEYEAR;
+        EndYear = components.year! + LASTSPACEYEAR;
         
-        for var y = StartYear; y <= EndYear; y++
-        {
+        for y in StartYear...EndYear {
             years.append(y.description)
         }
         
@@ -45,12 +43,12 @@ class DatePickerSource: NSObject {
         return months
     }
     
-    func getDaysInMonth(mdate:NSDate) -> Array<String>
+    func getDaysInMonth(_ mdate:Date) -> Array<String>
     {
         
         var days = [String]()
-        let daysRange = calendar?.rangeOfUnit(NSCalendarUnit.DayCalendarUnit, inUnit: NSCalendarUnit.MonthCalendarUnit, forDate: mdate)
-        for d in 1...daysRange!.length
+        let daysRange:Range! = calendar.range(of: .day, in: .month, for: mdate)
+        for d in 1...daysRange.upperBound
         {
             days.append(d.description)
         }
@@ -58,11 +56,11 @@ class DatePickerSource: NSObject {
         return days
     }
     
-    func getDates() ->Array<NSDate>
+    func getDates() ->Array<Date>
     {
-        var dates:[NSDate] = Array()
-        components.calendar = calendar
-        components.timeZone = timeZone
+        var dates:[Date] = Array()
+        (components as NSDateComponents).calendar = calendar
+        (components as NSDateComponents).timeZone = timeZone
         components.year = StartYear
         components.month = 1
         components.day = 1
@@ -70,22 +68,22 @@ class DatePickerSource: NSObject {
         components.minute = 0
         components.second = 0
         
-        let yearMin:NSDate = components.date!
-        let yearMax:NSDate = NSDate.new()
+        let yearMin:Date = (components as NSDateComponents).date!
+        let yearMax:Date = Date()
         
         let timestampMin = yearMin.timeIntervalSince1970
         let timestampMax = yearMax.timeIntervalSince1970
         
         while timestampMin < timestampMax
         {
-            let date = NSDate.init(timeIntervalSince1970:timestampMin)
+            let date = Date.init(timeIntervalSince1970:timestampMin)
             dates.append(date)
         }
         
         return dates;
     }
     
-    func convertToDateDay(day:Int,month:Int,year:Int) -> NSDate
+    func convertToDateDay(_ day:Int,month:Int,year:Int) -> Date
     {
         components.calendar = calendar
         components.timeZone = timeZone
@@ -99,13 +97,12 @@ class DatePickerSource: NSObject {
         return components.date!
     }
     
-    func getYearAndMonthAndDay(date:NSDate) -> Array<String>
+    func getYearAndMonthAndDay(_ date:Date) -> Array<String>
     {
-        let unitFlags = NSCalendarUnit.YearCalendarUnit|NSCalendarUnit.MonthCalendarUnit|NSCalendarUnit.DayCalendarUnit|NSCalendarUnit.WeekdayCalendarUnit|NSCalendarUnit.HourCalendarUnit|NSCalendarUnit.MinuteCalendarUnit|NSCalendarUnit.SecondCalendarUnit
-        var nowComponents = calendar!.components(unitFlags, fromDate: NSDate.new())
-        var year = nowComponents.year.description
-        var month = nowComponents.month.description
-        var day = nowComponents.day.description
-        return [year,month,day]
+        var nowComponents = calendar.dateComponents([.year,.month,.day,.weekday,.hour,.minute,.second], from: Date())
+        let year = nowComponents.year?.description
+        let month = nowComponents.month?.description
+        let day = nowComponents.day?.description
+        return [year!,month!,day!]
     }
 }

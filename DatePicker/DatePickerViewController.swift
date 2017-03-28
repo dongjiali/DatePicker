@@ -10,7 +10,7 @@ import UIKit
 
 protocol DatePickerChoiceDelegate
 {
-    func didChoiceDatePicker(datePickerView: DatePickerView)
+    func didChoiceDatePicker(_ datePickerView: DatePickerView)
 }
 
 class DatePickerViewController: UIViewController,DatePickerDelegate {
@@ -20,11 +20,11 @@ class DatePickerViewController: UIViewController,DatePickerDelegate {
     var choiceDelegate:DatePickerChoiceDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
-        var pickerView = DatePickerView(frame: self.view.frame)
+        let pickerView = DatePickerView(frame: self.view.frame)
         pickerView.delegate = self
-        pickerView.backgroundColor = UIColor.clearColor()
+        pickerView.backgroundColor = UIColor.clear
         self.view = pickerView
-        self.view.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.height)
+        self.view.frame = CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.height)
         // Do any additional setup after loading the view.
     }
     
@@ -36,39 +36,38 @@ class DatePickerViewController: UIViewController,DatePickerDelegate {
     func showDatePickerView()
     {
         //改变状态栏颜色
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
-        var keyWindow = UIApplication.sharedApplication().keyWindow
+        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
+        let keyWindow = UIApplication.shared.keyWindow
         keyWindow?.addSubview(self.view)
         
-        UIView.animateWithDuration(0.3, animations: { () -> Void in
-            self.view.frame = CGRectMake(0, -10, self.view.frame.size.width, self.view.frame.size.height);
-            self.preaSuperView.transform = CGAffineTransformMakeScale(0.90, 0.90);
+        UIView.animate(withDuration: 0.3, animations: { () -> Void in
+            self.view.frame = CGRect(x: 0, y: -10, width: self.view.frame.size.width, height: self.view.frame.size.height);
+            self.preaSuperView.transform = CGAffineTransform(scaleX: 0.90, y: 0.90);
             self.preaSuperView.alpha = 0.6;
-            self.preaSuperView.userInteractionEnabled = false;
-            }) { (Bool) -> Void in
-                UIView.animateWithDuration(0.25, animations: { () -> Void in
-                    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+            self.preaSuperView.isUserInteractionEnabled = false;
+            }, completion: { (Bool) -> Void in
+                UIView.animate(withDuration: 0.25, animations: { () -> Void in
+                    self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height);
                 })
-        }
+        }) 
     }
     
     func dismissDatePickerView()
     {
-        UIView.animateWithDuration(0.3, animations: { () -> Void in
-            self.view.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
-            self.preaSuperView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+        UIView.animate(withDuration: 0.3, animations: { () -> Void in
+            self.view.frame = CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.size.height);
+            self.preaSuperView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0);
             self.preaSuperView.alpha = 1.0;
-        }) { (Bool) -> Void in
-            self.preaSuperView.userInteractionEnabled = true;
-            UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: true)
+        }, completion: { (Bool) -> Void in
+            self.preaSuperView.isUserInteractionEnabled = true;
+            UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.default, animated: true)
             self.view.removeFromSuperview()
-        }
+        }) 
     }
     
     
-    func didSelectedItemDatePicker(datePickerView: DatePickerView) {
+    func didSelectedItemDatePicker(_ datePickerView: DatePickerView) {
         selectDate = datePickerView.selectedDateString
-        println(selectDate)
         choiceDelegate?.didChoiceDatePicker(datePickerView)
         self.dismissDatePickerView()
     }

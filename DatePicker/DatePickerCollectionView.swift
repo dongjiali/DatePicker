@@ -9,8 +9,8 @@
 import UIKit
 
 protocol PickerValueChangeDelegate {
-    func didEndDecelerating(collectionView: DatePickerCollectionView)
-    func DidScroll(collectionView: DatePickerCollectionView)
+    func didEndDecelerating(_ collectionView: DatePickerCollectionView)
+    func DidScroll(_ collectionView: DatePickerCollectionView)
 }
 
 class DatePickerCollectionView: UICollectionView,UICollectionViewDataSource,UICollectionViewDelegate{
@@ -20,11 +20,11 @@ class DatePickerCollectionView: UICollectionView,UICollectionViewDataSource,UICo
     var pickerDelegate: PickerValueChangeDelegate?
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
-        self.registerNib(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
+        self.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
         self.contentInset = UIEdgeInsetsMake(220/2.0 - 44/2.0, 0, 220/2.0 - 44/2.0, 0)
-        self.backgroundColor = UIColor.clearColor()
-        self.scrollEnabled = true
-        self.userInteractionEnabled = true
+        self.backgroundColor = UIColor.clear
+        self.isScrollEnabled = true
+        self.isUserInteractionEnabled = true
         self.showsVerticalScrollIndicator = false
         self.dataSource = self;
         self.delegate = self
@@ -34,56 +34,56 @@ class DatePickerCollectionView: UICollectionView,UICollectionViewDataSource,UICo
         fatalError("init(coder:) has not been implemented")
     }
     
-    func highlightCellWithIndexPathRow(indexPathRow:Int)
+    func highlightCellWithIndexPathRow(_ indexPathRow:Int)
     {
         selectedItemTag = indexPathRow;
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        DispatchQueue.main.async(execute: { () -> Void in
             self.reloadData()
         })
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cellItemArray.count
         
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        var cell:CollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell:CollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
         cell.label.text = cellItemArray[indexPath.row]
         if indexPath.row == selectedItemTag
         {
-            cell.label.textColor = UIColor.whiteColor()
+            cell.label.textColor = UIColor.white
         }else
         {
-            cell.label.textColor = UIColor.blackColor()
+            cell.label.textColor = UIColor.black
         }
         return cell
     }
     
     func setCollectionViewOfContentOffset(){
         let contentY:CGFloat = CGFloat(selectedItemTag!) * 44.0 - 2*44.0;
-        self.setContentOffset(CGPointMake(0, contentY), animated: false)
+        self.setContentOffset(CGPoint(x: 0, y: contentY), animated: false)
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.centerValueForScrollView(scrollView)
         pickerDelegate?.didEndDecelerating(self)
     }
     
-    func centerValueForScrollView(scrollView: UIScrollView)
+    func centerValueForScrollView(_ scrollView: UIScrollView)
     {
         var offset = scrollView.contentOffset.y
         offset += (scrollView.contentInset.top)
-        var indexPathRow = Int(offset/44.0);
+        let indexPathRow = Int(offset/44.0);
         self.highlightCellWithIndexPathRow(indexPathRow)
     }
     
-    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.highlightCellWithIndexPathRow(-1)
         pickerDelegate?.DidScroll(self)
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        pickerDelegate?.didEndDecelerating(self)
     }
 }

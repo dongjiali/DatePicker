@@ -11,7 +11,7 @@ import UIKit
 
 class ViewController: UIViewController,DatePickerChoiceDelegate {
 
-    var datePicker = DatePickerViewController.new()
+    var datePicker = DatePickerViewController()
     @IBOutlet weak var dateButton: UIButton!
     
     override func viewDidLoad() {
@@ -20,12 +20,12 @@ class ViewController: UIViewController,DatePickerChoiceDelegate {
         datePicker.choiceDelegate = self
     }
 
-    @IBAction func clickButton(sender: AnyObject) {
+    @IBAction func clickButton(_ sender: AnyObject) {
         datePicker.showDatePickerView()
     }
     
-    func didChoiceDatePicker(datePickerView: DatePickerView) {
-        dateButton.setTitle(datePickerView.selectedDateString, forState:.Normal)
+    func didChoiceDatePicker(_ datePickerView: DatePickerView) {
+        dateButton.setTitle(datePickerView.selectedDateString, for:UIControlState())
     }
 
     override func didReceiveMemoryWarning() {

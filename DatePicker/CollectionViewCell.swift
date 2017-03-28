@@ -14,8 +14,8 @@ class CollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        label.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleHeight
-        self.selected = false
+        label.autoresizingMask = .flexibleWidth //.flexibleHeight
+        self.isSelected = false
     }
 
 }

@@ -15,7 +15,7 @@ class DatePickerFlowLayout: UICollectionViewFlowLayout {
     init(size frame:CGSize) {
         super.init()
         self.itemSize = frame;
-        self.scrollDirection = UICollectionViewScrollDirection.Vertical;
+        self.scrollDirection = UICollectionViewScrollDirection.vertical;
         self.sectionInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
         self.minimumLineSpacing = 0.0;
     }
@@ -25,20 +25,21 @@ class DatePickerFlowLayout: UICollectionViewFlowLayout {
     }
     
     
-    override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
     }
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
-        var array:Array = super.layoutAttributesForElementsInRect(rect)!
+    
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let array:Array = super.layoutAttributesForElements(in: rect)!
         var visibleRect:CGRect = CGRect()
         visibleRect.origin = self.collectionView!.contentOffset
         visibleRect.size = self.collectionView!.bounds.size
         
         for item in array
         {
-            var attributes:UICollectionViewLayoutAttributes = item as! UICollectionViewLayoutAttributes
-            let distance:CGFloat = CGRectGetMidY(visibleRect) - attributes.center.y;
+            let attributes:UICollectionViewLayoutAttributes = item 
+            let distance:CGFloat = visibleRect.midY - attributes.center.y;
             let normalizedDistance = distance / ACTIVE_DISTANCE;
             if fabs(distance) < ACTIVE_DISTANCE
             {
@@ -51,22 +52,22 @@ class DatePickerFlowLayout: UICollectionViewFlowLayout {
         return array
     }
     
-    override func targetContentOffsetForProposedContentOffset(proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         
         var offsetAdjustment = CGFloat(MAXFLOAT)
-        var horizontalCenter = proposedContentOffset.y + (CGRectGetHeight(self.collectionView!.bounds) / 2.0);
-        var targetRect:CGRect = CGRectMake(0.0, proposedContentOffset.y, self.collectionView!.bounds.size.width, self.collectionView!.bounds.size.height)
-        var array:NSArray = super.layoutAttributesForElementsInRect(targetRect)!
+        let horizontalCenter = proposedContentOffset.y + (self.collectionView!.bounds.height / 2.0);
+        let targetRect:CGRect = CGRect(x: 0.0, y: proposedContentOffset.y, width: self.collectionView!.bounds.size.width, height: self.collectionView!.bounds.size.height)
+        let array:NSArray = super.layoutAttributesForElements(in: targetRect)! as NSArray
         
         for item in array
         {
             let attributes:UICollectionViewLayoutAttributes = item as! UICollectionViewLayoutAttributes
-            var itemHorizontalCenter:CGFloat = attributes.center.y
+            let itemHorizontalCenter:CGFloat = attributes.center.y
             if (fabs(itemHorizontalCenter - horizontalCenter) <= fabs(offsetAdjustment)) {
                 offsetAdjustment = itemHorizontalCenter - horizontalCenter;
             }
         }
-        return CGPointMake(proposedContentOffset.x, proposedContentOffset.y + offsetAdjustment);
+        return CGPoint(x: proposedContentOffset.x, y: proposedContentOffset.y + offsetAdjustment);
     }
     
 }
